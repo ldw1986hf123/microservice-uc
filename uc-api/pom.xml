@@ -7,16 +7,5 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>uc-api</artifactId>
-    <name>Archetype - uc-api</name>
-    <url>http://maven.apache.org</url>
-
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-    </dependencies>
 
 </project>
