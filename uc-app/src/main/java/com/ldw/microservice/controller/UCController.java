@@ -12,4 +12,11 @@ public class UCController {
     public Result getUserById() {
         return Result.success("steven");
     }
+
+
+    @GetMapping("/getByDeptId")
+    public Result getByDeptId() {
+        return Result.success("steven");
+    }
+
 }
