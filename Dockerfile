@@ -5,7 +5,7 @@ FROM openjdk:8-jdk-slim
 WORKDIR /app
 
 # 复制项目 jar 文件到容器中
-COPY target/microservice-uc.jar microservice-uc.jar
+COPY uc-api/target/microservice-uc.jar microservice-uc.jar
 
 # 暴露应用端口（根据你的项目配置修改）
 EXPOSE 8001
