@@ -11,4 +11,4 @@ COPY uc-app/target/microservice-uc.jar microservice-uc.jar
 EXPOSE 8001
 
 # 启动命令
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "microservice-uc.jar"]
