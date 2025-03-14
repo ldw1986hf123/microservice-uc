@@ -5,7 +5,7 @@ mybatis:
   mapper-locations: mybatis/mapper/**/*.xml
 spring:
   application:
-    name: user-service
+    name: microservice-uc
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/cloudDB01
