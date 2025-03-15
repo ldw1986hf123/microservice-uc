@@ -8,7 +8,7 @@ spring:
     name: microservice-uc
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.172.129:3306/cloudDB01
+    url: jdbc:mysql://127.0.0.1:3306/cloudDB01
     username: root
     password: aaaaa888
   cloud:
@@ -16,11 +16,6 @@ spring:
       discovery:
         server-addr: 192.168.172.129:8848
         namespace: dev  # 或者具体的 namespace ID
-
-
-
-
-
 # 日志配置文件
 logging:
   config: classpath:logback-spring.xml
