@@ -18,7 +18,7 @@ spring:
         namespace: dev  # 或者具体的 namespace ID
         prefer-ip-address: true  # 让 Nacos 注册服务时使用 IP
           #实例的请求ip
-        ip-address: 192.168.172.129
+        ip: 192.168.172.129
 
 # 日志配置文件
 logging:
