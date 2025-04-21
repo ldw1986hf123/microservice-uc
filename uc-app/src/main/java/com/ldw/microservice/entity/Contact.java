@@ -9,7 +9,7 @@ public class Contact {
     /*      `contact_type` varchar(255) DEFAULT NULL,
       `location` varchar(255) DEFAULT NULL,
       `person_id` bigint(20) DEFAULT NULL*/
-    private String contractType;
+    private String contrctType;
     private String location;
     private String personId;
 }
