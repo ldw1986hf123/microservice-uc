@@ -3,6 +3,7 @@ server:
 mybatis:
   type-aliases-package: com.ldw.microservice.entity
   mapper-locations: mybatis/mapper/**/*.xml
+  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #是否输出sql语句
 spring:
   application:
     name: microservice-uc

@@ -10,7 +10,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient  // 启用 Nacos 服务发现
 @EnableFeignClients
 @MapperScan(basePackages = {"com.ldw.microservice.mapper"})
-  // 启用 Feign
 public class UCApplication {
     public static void main(String[] args) {
         SpringApplication.run(UCApplication.class, args);
