@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ldw.microservice.controller.UCApplication;
 import com.ldw.microservice.entity.Contact;
 import com.ldw.microservice.entity.Students;
+import com.ldw.microservice.wrapper.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,13 +30,15 @@ public class StudentMapperTest {
         LambdaQueryWrapper<Students> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Students::getStudId, 0);
         Students students = studentMapper.selectOne(queryWrapper);
+
         log.info(JSONUtil.toJsonStr(students));
     }
 
     @Test
     public void getsssOne() {
-        Contact contact = new Contact();
-        contact.setLocation("11");
+        QueryWrapper<Contact> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", "alice").like("email", "@example.com");
+
     }
 
     @Test
