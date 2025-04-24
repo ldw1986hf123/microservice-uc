@@ -11,5 +11,5 @@ public interface BaseMapper<T> {
         int insert(T entity);
 
         @SelectProvider(type = BaseSqlProvider.class, method = "selectById")
-        T selectById(@Param("id") Serializable id, @Param("modelClass") Class<T> modelClass);
+        T selectById(@Param("id") Serializable id);
 }

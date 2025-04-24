@@ -1,18 +1,30 @@
 package com.ldw.microservice.proxy;
 
-import java.lang.reflect.Field;
-import java.util.Map;
+import com.ldw.microservice.service.BaseMapper;
+import org.apache.ibatis.builder.annotation.ProviderContext;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Map;
 public class BaseSqlProvider {
 
-    public String insert(Object entity) {
-        Class<?> clazz = entity.getClass();
-        String table = clazz.getSimpleName().toLowerCase();
+    public String selectById(ProviderContext context, Map<String, Object> params) {
+        Class<?> entityClass = getEntityClassFromMapper(context);
+
+        String table = entityClass.getSimpleName().toLowerCase();
+
+        return String.format("SELECT * FROM %s WHERE id = #{id}", table);
+    }
+
+    public String insert(ProviderContext context, Object entity) {
+        Class<?> entityClass = entity.getClass();
+        String table = entityClass.getSimpleName().toLowerCase();
 
         StringBuilder columns = new StringBuilder();
         StringBuilder values = new StringBuilder();
 
-        for (Field field : clazz.getDeclaredFields()) {
+        for (Field field : entityClass.getDeclaredFields()) {
             field.setAccessible(true);
             try {
                 Object val = field.get(entity);
@@ -25,23 +37,30 @@ public class BaseSqlProvider {
             }
         }
 
-        // Remove trailing commas
-        columns.setLength(columns.length() - 1);
-        values.setLength(values.length() - 1);
+        if (columns.length() > 0) columns.setLength(columns.length() - 1);
+        if (values.length() > 0) values.setLength(values.length() - 1);
 
         return String.format("INSERT INTO %s (%s) VALUES (%s)", table, columns, values);
     }
 
-    public String selectById(Map<String, Object> params) {
-        // 获取方法调用的类
-        Class<?> modelClass = (Class<?>) params.get("modelClass");
-        if (modelClass == null) {
-            throw new IllegalArgumentException("实体类类型不能为空");
+    private Class<?> getEntityClassFromMapper(ProviderContext context) {
+        String mapperClassName = context.getMapperType().getName(); // 如 com.example.mapper.UserMapper
+        Class<?> mapperClass = context.getMapperType();
+
+        // 获取 BaseMapper 的泛型参数 T
+        Type[] genericInterfaces = mapperClass.getGenericInterfaces();
+        for (Type type : genericInterfaces) {
+            if (type instanceof ParameterizedType) {
+                ParameterizedType pt = (ParameterizedType) type;
+                if (pt.getRawType() == BaseMapper.class) {
+                    Type entityType = pt.getActualTypeArguments()[0];
+                    if (entityType instanceof Class) {
+                        return (Class<?>) entityType;
+                    }
+                }
+            }
         }
-        // 获取表名，假设表名与类名相同（小写）
-        String table = modelClass.getSimpleName().toLowerCase();
-        // 获取 ID 参数
-        Object id = params.get("id");
-        return String.format("SELECT * FROM %s WHERE id = #{id}", table);
+
+        throw new IllegalStateException("无法解析实体类类型: " + mapperClassName);
     }
 }
