@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //@Import({FeignAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class, FeignConfig.class})
@@ -73,13 +74,8 @@ public class AustraliaDeviceMapperTest {
 
     @Test
     public void testIn() {
-        List list=Lists.newArrayList("1", "2");
         QueryWrapper<Contact> wrapper = new QueryWrapper<>();
-        wrapper.in("id",list )
-//                .like("contact_type", "ldw")
-                /*   .gt("location", 18)
-                   .orderByDesc("person_id")*/
-                .limit(0, 10);
+        wrapper.in("id", Arrays.asList(1, 2, 3)) ;
 
         List<Contact> contactList = contractMapper.selectList(wrapper, wrapper.getParamMap());
         log.info(JSONUtil.toJsonStr(contactList));

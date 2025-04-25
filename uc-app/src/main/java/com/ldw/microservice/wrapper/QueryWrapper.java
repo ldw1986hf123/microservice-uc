@@ -108,7 +108,6 @@ public class QueryWrapper<T> {
 
 
     public Map<String, Object> getParamMap() {
-        Map<String, Object> paramMap = new HashMap<>();
         for (Condition cond : conditions) {
             paramMap.put(cond.field, cond.value);
         }
