@@ -50,7 +50,7 @@ public class AustraliaDeviceMapperTest {
         contact.setLocation("11");
         contractMapper.insert(contact);
         Contact dbUser = contractMapper.selectById(1L);
-        System.out.println("查询到用户: " + dbUser.getLocation() + "，年龄：" + dbUser.getContactType());
+        System.out.println("查询到用ss户: " + dbUser.getLocation() + "，年龄：" + dbUser.getContactType());
     }
 
     @Test
