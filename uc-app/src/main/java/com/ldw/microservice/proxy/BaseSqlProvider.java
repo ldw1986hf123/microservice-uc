@@ -20,14 +20,14 @@ public class BaseSqlProvider {
     }
 
 
-    public String selectList(ProviderContext context, @Param("wrapper") QueryWrapper<?> wrapper) {
+    /*public String selectList(ProviderContext context, @Param("wrapper") QueryWrapper<?> wrapper) {
         Class<?> entityClass = getEntityClassFromMapper(context);
         String table = entityClass.getSimpleName().toLowerCase();
 
         String where = wrapper != null ? wrapper.buildWhereClause() : "";
 
         return String.format("SELECT * FROM %s %s", table, where);
-    }
+    }*/
 
 
 

@@ -37,7 +37,7 @@ public class StudentMapperTest {
     @Test
     public void getsssOne() {
         QueryWrapper<Contact> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", "alice").like("email", "@example.com");
+        wrapper.eq(Contact::getLocation, "alice").like(Contact::getPersonId, "@example.com");
 
     }
 

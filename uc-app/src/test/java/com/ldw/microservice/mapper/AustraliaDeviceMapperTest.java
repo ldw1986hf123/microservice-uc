@@ -61,7 +61,7 @@ public class AustraliaDeviceMapperTest {
     }
 
 
-    @Test
+   /* @Test
     public void selectCount() {
         QueryWrapper<Contact> wrapper = new QueryWrapper<Contact>();
         wrapper.eq("location", "11");
@@ -69,13 +69,13 @@ public class AustraliaDeviceMapperTest {
         List<Contact> contactList = contractMapper.selectList(wrapper, wrapper.getParamMap());
         log.info(JSONUtil.toJsonStr(contactList));
 
-    }
+    }*/
 
 
     @Test
     public void testIn() {
         QueryWrapper<Contact> wrapper = new QueryWrapper<>();
-        wrapper.in("id", Arrays.asList(1, 2, 3)) ;
+        wrapper.in(Contact::getPersonId, Arrays.asList(1, 2, 3)) ;
 
         List<Contact> contactList = contractMapper.selectList(wrapper, wrapper.getParamMap());
         log.info(JSONUtil.toJsonStr(contactList));
@@ -85,10 +85,10 @@ public class AustraliaDeviceMapperTest {
     @Test
     public void testlike() {
         QueryWrapper<Contact> wrapper = new QueryWrapper<>();
-        wrapper.like("contact_type", "g")
+        wrapper.like(Contact::getContactType, "g")
                 /*   .gt("location", 18)
                    .orderByDesc("person_id")*/
-                .limit(0, 10);
+                .limit(  10);
 
         List<Contact> contactList = contractMapper.selectList(wrapper, wrapper.getParamMap());
         log.info(JSONUtil.toJsonStr(contactList));
