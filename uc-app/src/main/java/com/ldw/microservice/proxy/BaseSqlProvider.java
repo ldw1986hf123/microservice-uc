@@ -20,14 +20,14 @@ public class BaseSqlProvider {
     }
 
 
-    /*public String selectList(ProviderContext context, @Param("wrapper") QueryWrapper<?> wrapper) {
+    public String selectList(ProviderContext context, @Param("wrapper") QueryWrapper<?> wrapper) {
         Class<?> entityClass = getEntityClassFromMapper(context);
         String table = entityClass.getSimpleName().toLowerCase();
 
-        String where = wrapper != null ? wrapper.buildWhereClause() : "";
+        String where = wrapper != null ? wrapper.getSqlSegment() : "";
 
         return String.format("SELECT * FROM %s %s", table, where);
-    }*/
+    }
 
 
 
@@ -68,10 +68,6 @@ public class BaseSqlProvider {
 
         return String.format("SELECT * FROM %s WHERE %s = #{value}", table, field);
     }
-
-
-
-
 
     private Class<?> getEntityClassFromMapper(ProviderContext context) {
         String mapperClassName = context.getMapperType().getName(); // 如 com.example.mapper.UserMapper

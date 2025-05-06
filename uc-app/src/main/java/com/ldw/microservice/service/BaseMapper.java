@@ -19,6 +19,7 @@ public interface BaseMapper<T> {
 
     @SelectProvider(type = BaseSqlProvider.class, method = "selectByField")
     T selectByField(@Param("field") String field, @Param("value") Object value);
+
     @SelectProvider(type = BaseSqlProvider.class, method = "selectList")
     List<T> selectList(@Param("wrapper") QueryWrapper<T> wrapper, @Param("params") Map<String, Object> params);
 

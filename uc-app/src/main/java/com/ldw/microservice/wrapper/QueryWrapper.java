@@ -3,137 +3,175 @@ package com.ldw.microservice.wrapper;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.lang.invoke.SerializedLambda;
 
 public class QueryWrapper<T> {
-    private final List<Condition> conditions = new ArrayList<>();
+
+    private final List<String> sqlSegments = new ArrayList<>();
     private final Map<String, Object> paramMap = new HashMap<>();
-    private final StringBuilder sql = new StringBuilder("1=1");
+    private String alias = ""; // 表别名（如果需要）
 
-
-    private static class Condition {
-        String field;
-        String operator;
-        Object value;
-        String rawSql; // 用于 order by, limit 这类无需占位符的拼接
-
-        Condition(String field, String operator, Object value) {
-            this.field = field;
-            this.operator = operator;
-            this.value = value;
+    // 设置表别名
+    public QueryWrapper<T> alias(String alias) {
+        if (alias != null && !alias.trim().isEmpty()) {
+            this.alias = alias.trim() + ".";
         }
-
-        Condition(String rawSql) {
-            this.rawSql = rawSql;
-        }
-
-        boolean isRaw() {
-            return rawSql != null;
-        }
+        return this;
     }
 
-    // 获取字段名
-    private String getColumnName(String fieldName) {
-        StringBuilder result = new StringBuilder();
-        char[] chars = fieldName.toCharArray();
-        for (char c : chars) {
-            if (Character.isUpperCase(c)) {
-                result.append('_').append(Character.toLowerCase(c));
-            } else {
-                result.append(c);
-            }
-        }
-        return result.toString();
-    }
-
-    // eq: 相等查询
+    // eq =
     public <R> QueryWrapper<T> eq(Function<T, R> func, R value) {
         if (value != null) {
-            String fieldName = getFieldName(func);  // 获取字段名
-            String column = getColumnName(fieldName); // 转换为数据库字段名
-            String key = fieldName + "_eq";
-            paramMap.put(key, value);
-            sql.append(" AND ").append(column).append(" = #{params.").append(key).append("}");
+            addCondition(func, "=", value);
         }
         return this;
     }
 
-    // like: 模糊查询
+    // ne !=
+    public <R> QueryWrapper<T> ne(Function<T, R> func, R value) {
+        if (value != null) {
+            addCondition(func, "<>", value);
+        }
+        return this;
+    }
+
+    // gt >
+    public <R> QueryWrapper<T> gt(Function<T, R> func, R value) {
+        if (value != null) {
+            addCondition(func, ">", value);
+        }
+        return this;
+    }
+
+    // lt <
+    public <R> QueryWrapper<T> lt(Function<T, R> func, R value) {
+        if (value != null) {
+            addCondition(func, "<", value);
+        }
+        return this;
+    }
+
+    // ge >=
+    public <R> QueryWrapper<T> ge(Function<T, R> func, R value) {
+        if (value != null) {
+            addCondition(func, ">=", value);
+        }
+        return this;
+    }
+
+    // le <=
+    public <R> QueryWrapper<T> le(Function<T, R> func, R value) {
+        if (value != null) {
+            addCondition(func, "<=", value);
+        }
+        return this;
+    }
+
+    // like
     public QueryWrapper<T> like(Function<T, String> func, String value) {
         if (value != null && !value.isEmpty()) {
-            String fieldName = getFieldName(func);  // 获取字段名
-            String column = getColumnName(fieldName);
-            String key = fieldName + "_like";
+            String column = getColumnName(func);
+            String key = buildKey(column, "like");
+            sqlSegments.add("AND " + alias + column + " LIKE #{" + "params." + key + "}");
             paramMap.put(key, "%" + value + "%");
-            sql.append(" AND ").append(column).append(" LIKE #{params.").append(key).append("}");
         }
         return this;
     }
 
-    // in: 集合查询
+    // in
     public <R> QueryWrapper<T> in(Function<T, R> func, Collection<?> values) {
         if (values != null && !values.isEmpty()) {
-            String fieldName = getFieldName(func);  // 获取字段名
-            String column = getColumnName(fieldName);
+            String column = getColumnName(func);
             List<String> placeholders = new ArrayList<>();
-            int index = 0;
+            int idx = 0;
             for (Object val : values) {
-                String key = fieldName + "_in_" + index++;
+                String key = buildKey(column, "in" + idx++);
+                placeholders.add("#{" + "params." + key + "}");
                 paramMap.put(key, val);
-                placeholders.add("#{params." + key + "}");
             }
-            sql.append(" AND ").append(column).append(" IN (")
-                    .append(String.join(", ", placeholders)).append(")");
+            sqlSegments.add("AND " + alias + column + " IN (" + String.join(", ", placeholders) + ")");
         }
         return this;
     }
 
-    // orderByAsc: 排序
+    // orderByAsc
     public QueryWrapper<T> orderByAsc(Function<T, ?> func) {
-        String fieldName = getFieldName(func);
-        String column = getColumnName(fieldName);
-        sql.append(" ORDER BY ").append(column).append(" ASC");
+        String column = getColumnName(func);
+        sqlSegments.add("ORDER BY " + alias + column + " ASC");
         return this;
     }
 
-    // orderByDesc: 排序
+    // orderByDesc
     public QueryWrapper<T> orderByDesc(Function<T, ?> func) {
-        String fieldName = getFieldName(func);
-        String column = getColumnName(fieldName);
-        sql.append(" ORDER BY ").append(column).append(" DESC");
+        String column = getColumnName(func);
+        sqlSegments.add("ORDER BY " + alias + column + " DESC");
         return this;
     }
 
-    // limit: 限制查询
+    // limit
     public QueryWrapper<T> limit(int limit) {
-        sql.append(" LIMIT ").append(limit);
+        sqlSegments.add("LIMIT " + limit);
         return this;
     }
 
-    // 获取字段名：通过反射从方法引用中提取字段名称
-    private String getFieldName(Function<T, ?> func) {
+    // =========== 工具方法 ==========
+
+    private <R> void addCondition(Function<T, R> func, String operator, Object value) {
+        String column = getColumnName(func);
+        String key = buildKey(column, operator);
+        sqlSegments.add("AND " + alias + column + " " + operator + " #{" + "params." + key + "}");
+        paramMap.put(key, value);
+    }
+
+    // 从方法引用提取字段名
+    private String getColumnName(Function<T, ?> func) {
         try {
-            Method method = func.getClass().getDeclaredMethod("apply", Object.class);
-            String methodName = method.getName();
-            String fieldName = methodName.replaceFirst("get", "");
-            fieldName = Character.toLowerCase(fieldName.charAt(0)) + fieldName.substring(1); // 转成小写开头
-            return fieldName;
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Failed to extract field name from method reference", e);
+            Method method = func.getClass().getDeclaredMethod("writeReplace");
+            method.setAccessible(true);
+            SerializedLambda lambda = (SerializedLambda) method.invoke(func);
+            String getter = lambda.getImplMethodName(); // getApplyStatus
+            if (getter.startsWith("get")) {
+                getter = getter.substring(3);
+            } else if (getter.startsWith("is")) {
+                getter = getter.substring(2);
+            }
+            String field = Character.toLowerCase(getter.charAt(0)) + getter.substring(1);
+            return camelToUnderscore(field); // 转成 apply_status
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to extract field name from lambda", e);
         }
     }
 
-    // 获取 SQL 查询片段
+    // 驼峰转下划线
+    private String camelToUnderscore(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                sb.append('_').append(Character.toLowerCase(c));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    // 参数 key 生成
+    private String buildKey(String column, String suffix) {
+        return column + "_" + suffix.replaceAll("[^a-zA-Z0-9]", "");
+    }
+
+    // 获取 SQL 片段
     public String getSqlSegment() {
-        return sql.toString();
+        StringJoiner joiner = new StringJoiner(" ");
+        joiner.add("WHERE 1=1");
+        for (String segment : sqlSegments) {
+            joiner.add(segment);
+        }
+        return joiner.toString();
     }
 
-
+    // 获取参数
     public Map<String, Object> getParamMap() {
-        for (Condition cond : conditions) {
-            paramMap.put(cond.field, cond.value);
-        }
         return paramMap;
     }
 }
-
