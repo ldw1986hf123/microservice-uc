@@ -1,12 +1,8 @@
 package com.ldw.microservice.mapper;
 
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.google.common.collect.Lists;
 import com.ldw.microservice.controller.UCApplication;
-import com.ldw.microservice.entity.AustraliaDevice;
 import com.ldw.microservice.entity.Contact;
-import com.ldw.microservice.service.BaseMapper;
 import com.ldw.microservice.wrapper.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
