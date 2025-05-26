@@ -9,10 +9,23 @@ spring:
   application:
     name: microservice-uc
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/airlines?serverTimezone=Asia/Shanghai
-    username: root
-    password: aaaaa888
+    dynamic:
+      primary: db1         # 默认数据源
+      strict: false        # 严格匹配（true 时必须指定，否则报错）
+      datasource:
+        db1:
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/airlines?serverTimezone=Asia/Shanghai
+          username: root
+          password: aaaaa888
+        db2:
+          url: jdbc:mysql://localhost:3306/luckypai?useSSL=false&serverTimezone=UTC
+          username: root
+          password: aaaaa888
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+
   cloud:
     nacos:
       discovery:

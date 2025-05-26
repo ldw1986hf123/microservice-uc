@@ -1,7 +1,7 @@
 package com.ldw.microservice.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ldw.microservice.entity.Contact;
-import com.ldw.microservice.service.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
