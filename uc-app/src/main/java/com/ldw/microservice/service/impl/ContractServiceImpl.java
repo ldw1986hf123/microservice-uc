@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contact> implements ContractService {
@@ -20,11 +22,12 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contact> im
     @Autowired
     RedPacketRecordService redPacketRecordService;
 
+    @Override
     public void login() {
         Contact contact = getOne(new LambdaQueryWrapper<Contact>().eq(Contact::getPersonId, 1));
         log.info(JSONUtil.toJsonStr(contact));
-        RedPacketRecord redPacketRecord = redPacketRecordService.getOne(new LambdaQueryWrapper<RedPacketRecord>().eq(RedPacketRecord::getRedPacketId, 1));
-        log.info(JSONUtil.toJsonStr(redPacketRecord));
+        List<RedPacketRecord> redPacketRecords = redPacketRecordService.list(new LambdaQueryWrapper<RedPacketRecord>().eq(RedPacketRecord::getRedPacketId, 1));
+        log.info(JSONUtil.toJsonStr(redPacketRecords));
     }
 
 }

@@ -1,9 +1,10 @@
 package com.ldw.microservice.mapper;
 
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ldw.microservice.controller.UCApplication;
 import com.ldw.microservice.entity.Contact;
-import com.ldw.microservice.wrapper.QueryWrapper;
+import com.ldw.microservice.service.ContractService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
@@ -25,8 +26,11 @@ import java.util.List;
 public class AustraliaDeviceMapperTest {
     @Autowired
     ContractMapper contractMapper;
+
+
+
     @Autowired
-    private SqlSession sqlSession;
+    ContractService contractService;
 
 
     @Test
@@ -44,51 +48,21 @@ public class AustraliaDeviceMapperTest {
     public void getsssOne() {
         Contact contact = new Contact();
         contact.setLocation("11");
-        contractMapper.insert(contact);
-        Contact dbUser = contractMapper.selectById(1L);
-        System.out.println("查询到用ss户: " + dbUser.getLocation() + "，年龄：" + dbUser.getContactType());
+        contractService.login();
     }
+
+
+
 
     @Test
-    public void selectByField() {
-        Contact contact = contractMapper.selectByField("location", 11);
-
-        log.info(JSONUtil.toJsonStr(contact));
-    }
-
-
-   /* @Test
     public void selectCount() {
-        QueryWrapper<Contact> wrapper = new QueryWrapper<Contact>();
+   /*     QueryWrapper<Contact> wrapper = new QueryWrapper<Contact>();
         wrapper.eq("location", "11");
 
-        List<Contact> contactList = contractMapper.selectList(wrapper, wrapper.getParamMap());
+        List<Contact> contactList = contractMapper
         log.info(JSONUtil.toJsonStr(contactList));
-
-    }*/
-
-
-    @Test
-    public void testIn() {
-        QueryWrapper<Contact> wrapper = new QueryWrapper<>();
-        wrapper.in(Contact::getPersonId, Arrays.asList(1, 2, 3)) ;
-
-        List<Contact> contactList = contractMapper.selectList(wrapper, wrapper.getParamMap());
-        log.info(JSONUtil.toJsonStr(contactList));
-
+*/
     }
 
-    @Test
-    public void testlike() {
-        QueryWrapper<Contact> wrapper = new QueryWrapper<>();
-        wrapper.like(Contact::getContactType, "g")
-                /*   .gt("location", 18)
-                   .orderByDesc("person_id")*/
-                .limit(  10);
-
-        List<Contact> contactList = contractMapper.selectList(wrapper, wrapper.getParamMap());
-        log.info(JSONUtil.toJsonStr(contactList));
-
-    }
 
 }
