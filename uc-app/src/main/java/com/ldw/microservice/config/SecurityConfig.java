@@ -2,6 +2,7 @@ package com.ldw.microservice.config;
 
 import com.ldw.microservice.annotation.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,8 +28,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private UserDetailsServiceImpl userDetailsService;
+    @Value("${security.auth-enabled:true}")
+    private boolean authEnabled;
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -62,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/lnvite/**").permitAll()
                 // 其他请求需要认证  todo
-                .anyRequest().authenticated()
+                .anyRequest().access(authEnabled ? "isAuthenticated()" : "permitAll()")
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
