@@ -26,8 +26,6 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userDetailsService;
 
     private static final List<String> WHITELIST = Arrays.asList(
             "/auth/login", "/auth/register", "/auth/sendSMSCode", "/auth/confirmLogin", "/auth/tartCaptcha", "/auth/tartCaptchaV2",
@@ -35,11 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     );
 
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
-
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -57,9 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getTokenFromRequest(request);
 
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.getUsernameFromToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (StringUtils.hasText(token) ) {
+            UserDetails userDetails =null;
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,
