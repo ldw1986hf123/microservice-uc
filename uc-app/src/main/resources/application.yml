@@ -15,17 +15,14 @@ spring:
       datasource:
         db1:
           driver-class-name: com.mysql.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/airlines?serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://8.138.207.57:3306/airlines?serverTimezone=Asia/Shanghai
           username: root
-          password: aaaaa888
+          password: MyNewPassw0rd!
         db2:
-          url: jdbc:mysql://localhost:3306/luckypai?useSSL=false&serverTimezone=UTC
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://8.138.207.57:3306/airlines?serverTimezone=Asia/Shanghai
           username: root
-          password: aaaaa888
-          driver-class-name: com.mysql.cj.jdbc.Driver
-
-
-
+          password: MyNewPassw0rd!
   cloud:
     nacos:
       discovery:
