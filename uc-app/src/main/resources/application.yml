@@ -17,12 +17,12 @@ spring:
           driver-class-name: com.mysql.jdbc.Driver
           url: jdbc:mysql://8.138.207.57:3306/airlines?serverTimezone=Asia/Shanghai
           username: root
-          password: MyNewPassw0rd!
+          password: MyNewPassw0rd
         db2:
           driver-class-name: com.mysql.jdbc.Driver
           url: jdbc:mysql://8.138.207.57:3306/airlines?serverTimezone=Asia/Shanghai
           username: root
-          password: MyNewPassw0rd!
+          password: MyNewPassw0rd
   cloud:
     nacos:
       discovery:
