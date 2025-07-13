@@ -1,28 +1,8 @@
 server:
   port: 8001
-mybatis:
-  type-aliases-package: com.ldw.microservice.entity
-  mapper-locations: mybatis/mapper/**/*.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 spring:
   application:
     name: microservice-uc
-  datasource:
-    dynamic:
-      primary: db1         # 默认数据源
-      strict: false        # 严格匹配（true 时必须指定，否则报错）
-      datasource:
-        db1:
-          driver-class-name: com.mysql.jdbc.Driver
-          url: jdbc:mysql://8.138.207.57:3306/airlines?serverTimezone=Asia/Shanghai
-          username: root
-          password: MyNewPassw0rd!
-        db2:
-          driver-class-name: com.mysql.jdbc.Driver
-          url: jdbc:mysql://8.138.207.57:3306/airlines?serverTimezone=Asia/Shanghai
-          username: root
-          password: MyNewPassw0rd!
   cloud:
     nacos:
       discovery:
@@ -31,6 +11,11 @@ spring:
         prefer-ip-address: true  # 让 Nacos 注册服务时使用 IP
           #实例的请求ip
         ip: 192.168.172.129
+    config:
+      enabled: true
+      server-addr: 8.138.207.57:8848
+      namespace: ""  # 或者具体的 namespace ID
+      file-extension: yml
 
 # 日志配置文件
 logging:
