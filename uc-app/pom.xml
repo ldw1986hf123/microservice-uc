@@ -30,26 +30,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- SpringCloud Alibaba Nacos -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
+            <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba.nacos</groupId>
-                    <artifactId>nacos-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-client</artifactId>
         </dependency>
 
+        <!-- SpringCloud Alibaba Nacos Config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.11</version>
-            <scope>compile</scope>
+            <version>8.0.33</version>  <!-- 确保版本为 8.x -->
         </dependency>
         <dependency>
             <groupId>com.ldw.springcloud</groupId>
@@ -78,18 +73,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <!-- myabtis-plus -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.0</version>
-            <!-- <exclusions>
-                 <exclusion>
-                     <groupId>org.mybatis</groupId>
-                     <artifactId>mybatis</artifactId>
-                 </exclusion>
-             </exclusions>-->
-        </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -107,11 +90,11 @@
             <version>2.3.32</version>
         </dependency>
         <!-- MyBatis-Plus 动态数据源 -->
-        <dependency>
+       <!-- <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>3.5.0</version>
-        </dependency>
+        </dependency>-->
         <!-- Spring Security 核心依赖 -->
      <!--   <dependency>
             <groupId>org.springframework.boot</groupId>

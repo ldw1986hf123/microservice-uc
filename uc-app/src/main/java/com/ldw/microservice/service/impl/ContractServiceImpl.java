@@ -23,11 +23,10 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contact> im
     RedPacketRecordService redPacketRecordService;
 
     @Override
-    public void login() {
+    public Contact login() {
         Contact contact = getOne(new LambdaQueryWrapper<Contact>().eq(Contact::getPersonId, 1));
         log.info(JSONUtil.toJsonStr(contact));
-        List<RedPacketRecord> redPacketRecords = redPacketRecordService.list(new LambdaQueryWrapper<RedPacketRecord>().eq(RedPacketRecord::getRedPacketId, 1));
-        log.info(JSONUtil.toJsonStr(redPacketRecords));
+        return contact;
     }
 
 }
